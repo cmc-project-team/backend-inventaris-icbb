@@ -1,0 +1,34 @@
+const app_jabatan = require('../configs/app_jabatan/model');
+const app_user = require('../configs/app_user/model');
+const data_barang = require('../configs/data_barang/model');
+const data_barang_golongan = require('../configs/data_barang_golongan/model');
+const data_daur_ulang = require('../configs/data_daur_ulang/model');
+const data_divisi = require('../configs/data_divisi/model');
+const data_inventaris = require('../configs/data_inventaris/model');
+const data_peminjaman = require('../configs/data_peminjaman/model');
+const data_pengecekan = require('../configs/data_pengecekan/model');
+const data_penghapusan = require('../configs/data_penghapusan/model');
+const data_person = require('../configs/data_person/model');
+const data_person_type = require('../configs/data_person_type/model');
+const data_person_connect_type = require('../configs/data_person_connect_type/model');
+const data_riwayat_perlimpahan = require('../configs/data_riwayat_pelimpahan/model');
+const data_ruang = require('../configs/data_ruang/model');
+const model = {};
+
+
+model.app_jabatan = app_jabatan;
+model.app_user = app_user;
+model.data_barang = data_barang;
+model.data_barang_golongan = data_barang_golongan;
+model.data_daur_ulang = data_daur_ulang;
+model.data_divisi = data_divisi;
+model.data_inventaris = data_inventaris;
+model.data_peminjaman = data_peminjaman;
+model.data_pengecekan = data_pengecekan;
+model.data_penghapusan = data_penghapusan;
+model.data_person = data_person;
+model.data_person_connect_type = data_person_connect_type;
+model.data_person_type = data_person_type;
+model.data_riwayat_perlimpahan = data_riwayat_perlimpahan;
+model.data_ruang = data_ruang;
+module.exports= model;
