@@ -1,3 +1,4 @@
+require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const model = require('../../app/model');
 
@@ -8,7 +9,7 @@ const isAuth = async(req, res, next) => {
     // if(auth != null){
         try {
             const token = req.headers.authorization.split(" ") [1];
-            const data = jwt.verify(token,"secret");
+            const data = jwt.verify(token, process.env.JWT_SECRET);
             const kode = data.kode;
             const user = await model.app_user.findOne({
                 where : {
@@ -16,7 +17,7 @@ const isAuth = async(req, res, next) => {
                 }
             })
             console.log(user, data);
-            if (user != null && user.email == data.email) {
+            if (user != null && user.kode == kode) {
                 can_go = true;
             }
             // console.log("berhasil",data,user)

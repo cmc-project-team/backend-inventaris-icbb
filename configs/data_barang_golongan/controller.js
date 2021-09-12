@@ -75,7 +75,6 @@ controller.postData = async function (req, res, next) {
 controller.updateData = async function (req, res, next) {
   try {
       const data_barang_golongan = await model.data_barang_golongan.update({
-        kode: req.body.kode,
         code: req.body.code,
         nama: req.body.nama,
       }, {

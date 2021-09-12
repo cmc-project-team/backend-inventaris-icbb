@@ -1,4 +1,5 @@
 const model = require('../../app/model');
+const {success, noData} = require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
@@ -7,13 +8,13 @@ controller.getAll = async function (req, res , next) {
         if (app_jabatan.length > 0) {
           res.status(200).json({
             status: true,
-            message: 'Get Method app_jabatan',
+            message: success,
             data: app_jabatan
           })
         } else {
           res.status(200).json({
             status: true,
-            message: 'Tidak ada Data',
+            message: noData,
             data: []
           })
         }
@@ -74,7 +75,6 @@ controller.postData = async function (req, res, next) {
 controller.updateData = async function (req, res, next) {
   try {
       const app_jabatan = await model.app_jabatan.update({
-        kode: req.body.kode,
         nama: req.body.nama,
       }, {
           where: {

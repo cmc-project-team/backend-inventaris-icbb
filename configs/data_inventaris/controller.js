@@ -85,7 +85,6 @@ controller.postData = async function (req, res, next) {
 controller.updateData = async function (req, res, next) {
   try {
       const data_inventaris = await model.data_inventaris.update({
-        kode: req.body.kode,
         code: req.body.code,
         barang: req.body.barang,
         harga: req.body.harga,

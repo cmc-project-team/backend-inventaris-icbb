@@ -1,3 +1,4 @@
+require('dotenv').config();
 const model = require('../../app/model');
 const bcrypt = require('bcrypt');
 const passportJWT = require("passport-jwt");
@@ -10,7 +11,7 @@ let JwtStrategy = passportJWT.Strategy;
 
 let jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-jwtOptions.secretOrKey = "secret";
+jwtOptions.secretOrKey = process.env.JWT_SECRET;
 
 let strategy = new JwtStrategy(jwtOptions, (jwt_payload, done) => {
   let login = getUser({ kode: jwt_payload.kode });
@@ -184,16 +185,16 @@ controller.login = async function (req, res, next) {
       delete login.password;
 
       if(login.password ===  password) {
-        let payload = { kode: login.kode, email: login.email };
+        let payload = { kode: login.kode};
         
-        let token = jwt.sign( payload, jwtOptions.secretOrKey,{expiresIn: '1h'} );
+        let token = jwt.sign( payload, jwtOptions.secretOrKey,{expiresIn: '24h'} );
         const limit = new Date(Date.now() + (1 * 3600000));
         res.cookie("expresscookie", token, {
           httpOnly: true,
           expires: limit,
           maxAges: limit
         });
-        res.json({ message: "oke", token: token });
+        res.json({ message: "user berhasil login", token: token });
       } else {
         res.status(401).json({ message: "password salah "});
       };
