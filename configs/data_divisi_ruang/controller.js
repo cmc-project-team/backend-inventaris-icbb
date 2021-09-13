@@ -1,19 +1,19 @@
 const model = require('../../app/model');
-const {StatusCodes} = require('http-status-codes');
-const {success, noData, addSuccess, updateSuccess, deleteSuccess} = require('../../app/enum');
+const {StatusCodes}= require('http-status-codes');
+const { success, noData, addSuccess, updateSuccess, deleteSuccess } = require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_daur_ulang = await model.data_daur_ulang.findAll();
-        if (data_daur_ulang.length > 0) {
+        const data_divisi_ruang = await model.data_divisi_ruang.findAll();
+        if (data_divisi_ruang.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
             message: success,
-            data: data_daur_ulang
+            data: data_divisi_ruang
           })
         } else {
-          res.status(StatusCodes.OK).json({
+          res.status(StatusCodes.CREATED).json({
             status: true,
             message: noData,
             data: []
@@ -29,19 +29,19 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_daur_ulang = await model.data_daur_ulang.findAll({
+    const data_divisi_ruang = await model.data_divisi_ruang.findAll({
         where: {
             kode: req.params.kode
         }
     })
-    if (data_daur_ulang.length > 0) {
-      res.status(StatusCodes.OK).json({
+    if (data_divisi_ruang.length > 0) {
+      res.status(StatusCodes.CREATED).json({
         status: true,
         message: success,
-        data: data_daur_ulang
+        data: data_divisi_ruang
       })
     } else {
-      res.status(StatusCodes.OK).json({
+      res.status(StatusCodes.CREATED).json({
         status: true,
         message: noData,
         data: []
@@ -57,15 +57,15 @@ controller.getById = async function (req, res, next) {
 
 controller.postData = async function (req, res, next) {
   try {
-      const data_daur_ulang = await model.data_daur_ulang.create({
+      const data_divisi_ruang = await model.data_divisi_ruang.CREATED({
           kode: req.body.kode,
-          inventaris_lama: req.body.inventaris_lama,
-          inventaris_baru: req.body.inventaris_baru,
-          tanggal: req.body.tanggal,
+          divisi: req.body.divisi,
+          ruang: req.body.ruang,
+          person_penanggung_jawab: req.body.person_penanggung_jawab,
       })
       res.status(201).json({
           message: addSuccess,
-          data: data_daur_ulang
+          data: data_divisi_ruang
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({
@@ -77,19 +77,19 @@ controller.postData = async function (req, res, next) {
 
 controller.updateData = async function (req, res, next) {
   try {
-      const data_daur_ulang = await model.data_daur_ulang.update({
-        kode: req.body.kode,
-        inventaris_lama: req.body.inventaris_lama,
-        inventaris_baru: req.body.inventaris_baru,
-        tanggal: req.body.tanggal,
+      const data_divisi_ruang = await model.data_divisi_ruang.update({
+        code: req.body.code,
+        divisi: req.body.divisi,
+        ruang: req.body.ruang,
+        person_penanggung_jawab: req.body.person_penanggung_jawab,
       }, {
           where: {
               kode: req.params.kode
           }
       })
-      res.status(StatusCodes.OK).json({
+      res.status(StatusCodes.CREATED).json({
           message: updateSuccess,
-          data: data_daur_ulang
+          data: data_divisi_ruang
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({
@@ -100,14 +100,14 @@ controller.updateData = async function (req, res, next) {
 
 controller.deleteData = async function (req, res, next) {
   try {
-      const data_daur_ulang = await model.data_daur_ulang.destroy({
+      const data_divisi_ruang = await model.data_divisi_ruang.destroy({
           where: {
               kode: req.params.kode
           }
       })
-      res.status(StatusCodes.OK).json({
+      res.status(StatusCodes.CREATED).json({
           message: deleteSuccess,
-          data: data_daur_ulang
+          data: data_divisi_ruang
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({

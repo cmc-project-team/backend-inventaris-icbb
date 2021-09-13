@@ -1,24 +1,26 @@
 const model = require('../../app/model');
+const {StatusCodes}= require('http-status-codes');
+const {success, noData, addSuccess, updateSuccess, deleteSuccess}= require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
         const data_inventaris = await model.data_inventaris.findAll();
         if (data_inventaris.length > 0) {
-          res.status(200).json({
+          res.status(StatusCodes.OK).json({
             status: true,
-            message: 'Get Method data_inventaris',
+            message: success,
             data: data_inventaris
           })
         } else {
-          res.status(200).json({
+          res.status(StatusCodes.OK).json({
             status: true,
-            message: 'Tidak ada Data',
+            message: noData,
             data: []
           })
         }
   } catch (error) {
-    res.status(404).json({
+    res.status(StatusCodes.NOT_FOUND).json({
       status: false,
       message: error.message
     })
@@ -33,20 +35,20 @@ controller.getById = async function (req, res, next) {
         }
     })
     if (data_inventaris.length > 0) {
-      res.status(200).json({
+      res.status(StatusCodes.OK).json({
         status: true,
-        message: 'Get Method data_inventaris',
+        message: success,
         data: data_inventaris
       })
     } else {
-      res.status(200).json({
+      res.status(StatusCodes.OK).json({
         status: true,
-        message: 'Tidak ada Data',
+        message: noData,
         data: []
       })
     }
   } catch (error) {
-    res.status(404).json({
+    res.status(StatusCodes.NOT_FOUND).json({
       status: false,
       message: error.message
     })
@@ -70,12 +72,12 @@ controller.postData = async function (req, res, next) {
           person_pencatat: req.body.person_pencatat,
           tanggal_masuk: req.body.tanggal_masuk,
       })
-      res.status(201).json({
-          message: "data_inventaris berhasil ditambahkan",
+      res.status(StatusCodes>CREATED).json({
+          message: addSuccess,
           data: data_inventaris
       })
   } catch (error) {
-      res.status(404).json({
+      res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
       })
   };
@@ -102,12 +104,12 @@ controller.updateData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
-      res.status(200).json({
-          message: "data_inventaris berhasil di update",
+      res.status(StatusCodes.OK).json({
+          message: updateSuccess,
           data: data_inventaris
       })
   } catch (error) {
-      res.status(404).json({
+      res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
       })
   }
@@ -120,12 +122,12 @@ controller.deleteData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
-      res.status(200).json({
-          message: "data_inventaris berhasil di delete",
+      res.status(StatusCodes.OK).json({
+          message: deleteSuccess,
           data: data_inventaris
       })
   } catch (error) {
-      res.status(404).json({
+      res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
       })
   }

@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const passportJWT = require("passport-jwt");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const {StatusCodes} = require('http-status-codes');
+const {success, noData, addSuccess, updateSuccess, deleteSuccess, emailAlready, noEmail, exCookie, err, errr, loginSuccess, worngPassword, noAuth} = require('../../app/enum');
 const controller = {};
 
 let ExtractJwt = passportJWT.ExtractJwt;
@@ -38,20 +40,20 @@ controller.getAll = async function (req, res , next) {
   try {
         const app_user = await model.app_user.findAll();
         if (app_user.length > 0) {
-          res.status(200).json({
+          res.status(StatusCodes.OK).json({
             status: true,
-            message: 'Get Method app_user',
+            message: success,
             data: app_user
           })
         } else {
-          res.status(200).json({
+          res.status(StatusCodes.OK).json({
             status: true,
-            message: 'Tidak ada Data',
+            message: noData,
             data: []
           })
         }
   } catch (error) {
-    res.status(404).json({
+    res.status(StatusCodes.NOT_FOUND).json({
       status: false,
       message: error.message
     })
@@ -66,20 +68,20 @@ controller.getById = async function (req, res, next) {
         }
     })
     if (app_user.length > 0) {
-      res.status(200).json({
+      res.status(StatusCodes.OK).json({
         status: true,
-        message: 'Get Method app_user',
+        message: success,
         data: app_user
       })
     } else {
-      res.status(200).json({
+      res.status(StatusCodes.OK).json({
         status: true,
-        message: 'Tidak ada Data',
+        message: noData,
         data: []
       })
     }
   } catch (error) {
-    res.status(404).json({
+    res.status(StatusCodes.NOT_FOUND).json({
       status: false,
       message: error.message
     })
@@ -90,12 +92,12 @@ controller.postData = async function (req, res, next) {
   try {
     const alreadyExistsUser = await model.app_user.findOne({ where: { email: req.body.email } }).catch(
       (err) => {
-        console.log("Error: ", err);
+        console.log(errr, err);
       }
       );
       
       if (alreadyExistsUser) {
-        return res.status(409).json({ message: "User with email already exists!" });
+        return res.status(409).json({ message: emailAlready });
       }
     // const hash = await bcrypt.hash(req.body.password, 10);
   
@@ -105,18 +107,17 @@ controller.postData = async function (req, res, next) {
         nip: req.body.nip,
         nama: req.body.nama,
         jabatan: req.body.jabatan,
-        divisi: req.body.divisi,
         no_hp: req.body.no_hp,
         email: req.body.email,
         password: req.body.password,
         alamat: req.body.alamat
     })  
-    res.status(201).json({
-        message: "app_user berhasil ditambahkan",
+    res.status(StatusCodes.CREATED).json({
+        message: addSuccess,
         data: app_user
     })
   } catch (error) {
-      res.status(404).json({
+      res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
       })
   };
@@ -130,7 +131,6 @@ controller.updateData = async function (req, res, next) {
         nip: req.body.nip,
         nama: req.body.nama,
         jabatan: req.body.jabatan,
-        divisi: req.body.divisi,
         no_hp: req.body.no_hp,
         email: req.body.email,
         password: req.body.password,
@@ -140,12 +140,12 @@ controller.updateData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
-      res.status(200).json({
-          message: "app_user berhasil di update",
+      res.status(StatusCodes.OK).json({
+          message: updateSuccess,
           data: app_user
       })
   } catch (error) {
-      res.status(404).json({
+      res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
       })
   }
@@ -158,12 +158,12 @@ controller.deleteData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
-      res.status(200).json({
-          message: "app_user berhasil di delete",
+      res.status(StatusCodes.OK).json({
+          message: deleteSuccess,
           data: app_user
       })
   } catch (error) {
-      res.status(404).json({
+      res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
       })
   }
@@ -179,7 +179,7 @@ controller.login = async function (req, res, next) {
       let login = await getUser({email: email});
       // print("signin");
       if(!login){
-        return res.status(401).json({ message: "Email belum terdaftar"});
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: noEmail});
       };
       
       delete login.password;
@@ -189,21 +189,21 @@ controller.login = async function (req, res, next) {
         
         let token = jwt.sign( payload, jwtOptions.secretOrKey,{expiresIn: '24h'} );
         const limit = new Date(Date.now() + (1 * 3600000));
-        res.cookie("expresscookie", token, {
+        res.cookie(exCookie, token, {
           httpOnly: true,
           expires: limit,
           maxAges: limit
         });
-        res.json({ message: "user berhasil login", token: token });
+        res.json({ message: loginSuccess, token: token });
       } else {
-        res.status(401).json({ message: "password salah "});
+        res.status(StatusCodes.UNAUTHORIZED).json({ message: worngPassword});
       };
     } else{
-      res.status(400).json({ message: "Auth salah "});
+      res.status(StatusCodes.UNAUTHORIZED).json({ message: noAuth});
     }
 
   } catch (error) {
-    res.status(400).json({ message: error.message});
+    res.status(StatusCodes.NOT_FOUND).json({ message: error.message});
   }
 }
 

@@ -1,6 +1,8 @@
 require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const model = require('../../app/model');
+const {StatusCodes} = require('http-status-codes');
+const { noAuth } = require('../../app/enum');
 
 const isAuth = async(req, res, next) => {
     // const auth = req.cookies["expresscookie"];
@@ -30,8 +32,8 @@ const isAuth = async(req, res, next) => {
     if (can_go) {
         next();
     } else {
-        res.status(400).json({
-            message: "No Auth"
+        res.status(StatusCodes.NOT_FOUND).json({
+            message: noAuth
         })
     }
 }

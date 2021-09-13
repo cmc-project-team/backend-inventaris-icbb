@@ -1,4 +1,5 @@
 const model = require('../../app/model');
+const {success, noData, addSuccess, updateSuccess, deleteSuccess}= require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
@@ -7,13 +8,13 @@ controller.getAll = async function (req, res , next) {
         if (data_pengecekan.length > 0) {
           res.status(200).json({
             status: true,
-            message: 'Get Method data_pengecekan',
+            message: success,
             data: data_pengecekan
           })
         } else {
           res.status(200).json({
             status: true,
-            message: 'Tidak ada Data',
+            message: noData,
             data: []
           })
         }
@@ -35,13 +36,13 @@ controller.getById = async function (req, res, next) {
     if (data_pengecekan.length > 0) {
       res.status(200).json({
         status: true,
-        message: 'Get Method data_pengecekan',
+        message: success,
         data: data_pengecekan
       })
     } else {
       res.status(200).json({
         status: true,
-        message: 'Tidak ada Data',
+        message: noData,
         data: []
       })
     }
@@ -63,7 +64,7 @@ controller.postData = async function (req, res, next) {
           person_pengecek: req.body.person_pengecek,
       })
       res.status(201).json({
-          message: "data_pengecekan berhasil ditambahkan",
+          message: addSuccess,
           data: data_pengecekan
       })
   } catch (error) {
@@ -88,7 +89,7 @@ controller.updateData = async function (req, res, next) {
           }
       })
       res.status(200).json({
-          message: "data_pengecekan berhasil di update",
+          message: updateSuccess,
           data: data_pengecekan
       })
   } catch (error) {
@@ -106,7 +107,7 @@ controller.deleteData = async function (req, res, next) {
           }
       })
       res.status(200).json({
-          message: "data_pengecekan berhasil di delete",
+          message: deleteSuccess,
           data: data_pengecekan
       })
   } catch (error) {

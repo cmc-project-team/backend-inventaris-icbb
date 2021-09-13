@@ -11,6 +11,7 @@ const barangRouter = require('./configs/data_barang/router');
 const baranggolonganRouter = require('./configs/data_barang_golongan/router');
 const daurulangRouter = require('./configs/data_daur_ulang/router');
 const divisiRouter = require('./configs/data_divisi/router');
+const divisiruangRouter = require('./configs/data_divisi_ruang/router');
 const inventarisRouter = require('./configs/data_inventaris/router');
 const peminjamanRouter = require('./configs/data_peminjaman/router');
 const pengecekanRouter = require('./configs/data_pengecekan/router');
@@ -51,6 +52,7 @@ app.use('/person-type', persontypeRouter);
 app.use('/person-connect', personconnectRouter);
 app.use('/riwayat-pelimpahan', riwyatpelimpahanRouter);
 app.use('/ruang', ruangRouter);
+app.use('/divisi-ruang', divisiruangRouter);
 
 
 

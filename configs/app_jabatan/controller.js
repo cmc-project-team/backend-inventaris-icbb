@@ -1,25 +1,26 @@
 const model = require('../../app/model');
-const {success, noData} = require('../../app/enum');
+const {success, noData, addSuccess, updateSuccess, deleteSuccess} = require('../../app/enum');
+const {StatusCodes} = require('http-status-codes');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
         const app_jabatan = await model.app_jabatan.findAll();
         if (app_jabatan.length > 0) {
-          res.status(200).json({
+          res.status(StatusCodes.OK).json({
             status: true,
             message: success,
             data: app_jabatan
           })
         } else {
-          res.status(200).json({
+          res.status(StatusCodes.OK).json({
             status: true,
             message: noData,
             data: []
           })
         }
   } catch (error) {
-    res.status(404).json({
+    res.status(StatusCodes.NOT_FOUND).json({
       status: false,
       message: error.message
     })
@@ -34,20 +35,20 @@ controller.getById = async function (req, res, next) {
         }
     })
     if (app_jabatan.length > 0) {
-      res.status(200).json({
+      res.status(StatusCodes.OK).json({
         status: true,
-        message: 'Get Method app_jabatan',
+        message: success,
         data: app_jabatan
       })
     } else {
-      res.status(200).json({
+      res.status(StatusCodes.OK).json({
         status: true,
-        message: 'Tidak ada Data',
+        message: noData,
         data: []
       })
     }
   } catch (error) {
-    res.status(404).json({
+    res.status(StatusCodes.NOT_FOUND).json({
       status: false,
       message: error.message
     })
@@ -60,12 +61,12 @@ controller.postData = async function (req, res, next) {
           kode: req.body.kode,
           nama: req.body.nama,
       })
-      res.status(201).json({
-          message: "app_jabatan berhasil ditambahkan",
+      res.status(StatusCodes.CREATED).json({
+          message: addSuccess,
           data: app_jabatan
       })
   } catch (error) {
-      res.status(404).json({
+      res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
       })
   };
@@ -81,12 +82,12 @@ controller.updateData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
-      res.status(200).json({
-          message: "app_jabatan berhasil di update",
+      res.status(StatusCodes.OK).json({
+          message: updateSuccess,
           data: app_jabatan
       })
   } catch (error) {
-      res.status(404).json({
+      res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
       })
   }
@@ -99,12 +100,12 @@ controller.deleteData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
-      res.status(200).json({
-          message: "app_jabatan berhasil di delete",
+      res.status(StatusCodes.OK).json({
+          message: deleteSuccess,
           data: app_jabatan
       })
   } catch (error) {
-      res.status(404).json({
+      res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
       })
   }
