@@ -1,6 +1,5 @@
 const model = require('../../app/model');
 const {StatusCodes} = require('http-status-codes');
-const {StatusCodes} = require('http-status-codes');
 const {success, noData, addSuccess, updateSuccess, deleteSuccess}= require('../../app/enum');
 const controller = {};
 

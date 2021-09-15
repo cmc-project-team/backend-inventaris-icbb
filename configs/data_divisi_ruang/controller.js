@@ -13,7 +13,7 @@ controller.getAll = async function (req, res , next) {
             data: data_divisi_ruang
           })
         } else {
-          res.status(StatusCodes.CREATED).json({
+          res.status(StatusCodes.OK).json({
             status: true,
             message: noData,
             data: []
@@ -35,13 +35,13 @@ controller.getById = async function (req, res, next) {
         }
     })
     if (data_divisi_ruang.length > 0) {
-      res.status(StatusCodes.CREATED).json({
+      res.status(StatusCodes.OK).json({
         status: true,
         message: success,
         data: data_divisi_ruang
       })
     } else {
-      res.status(StatusCodes.CREATED).json({
+      res.status(StatusCodes.OK).json({
         status: true,
         message: noData,
         data: []
@@ -57,13 +57,13 @@ controller.getById = async function (req, res, next) {
 
 controller.postData = async function (req, res, next) {
   try {
-      const data_divisi_ruang = await model.data_divisi_ruang.CREATED({
+      const data_divisi_ruang = await model.data_divisi_ruang.create({
           kode: req.body.kode,
           divisi: req.body.divisi,
           ruang: req.body.ruang,
           person_penanggung_jawab: req.body.person_penanggung_jawab,
       })
-      res.status(201).json({
+      res.status(StatusCodes.CREATED).json({
           message: addSuccess,
           data: data_divisi_ruang
       })
@@ -87,7 +87,7 @@ controller.updateData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
-      res.status(StatusCodes.CREATED).json({
+      res.status(StatusCodes.OK).json({
           message: updateSuccess,
           data: data_divisi_ruang
       })
@@ -105,7 +105,7 @@ controller.deleteData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
-      res.status(StatusCodes.CREATED).json({
+      res.status(StatusCodes.OK).json({
           message: deleteSuccess,
           data: data_divisi_ruang
       })
