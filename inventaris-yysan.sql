@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 10, 2021 at 11:25 PM
+-- Generation Time: Sep 13, 2021 at 10:31 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.4.23
 
@@ -41,7 +41,7 @@ CREATE TABLE `app_jabatan` (
 
 INSERT INTO `app_jabatan` (`kode`, `nama`, `update`, `insert`, `status`) VALUES
 ('01', 'IT', '2021-09-10 18:48:29', '2021-09-10 18:48:29', '0'),
-('02', 'Sarpras', '2021-09-10 18:48:47', '2021-09-10 18:48:47', '0');
+('02', 'Sekertaris', '2021-09-12 00:02:50', '2021-09-10 18:48:47', '0');
 
 -- --------------------------------------------------------
 
@@ -54,11 +54,11 @@ CREATE TABLE `app_user` (
   `nip` varchar(30) DEFAULT NULL,
   `nama` varchar(50) DEFAULT NULL,
   `jabatan` varchar(10) DEFAULT NULL,
-  `divisi` varchar(10) DEFAULT NULL,
   `no_hp` varchar(15) DEFAULT NULL,
   `email` varchar(30) DEFAULT NULL,
   `password` varchar(500) NOT NULL,
   `alamat` varchar(255) DEFAULT NULL,
+  `role` varchar(50) DEFAULT NULL,
   `update` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `insert` timestamp NULL DEFAULT current_timestamp(),
   `status` enum('0','1') DEFAULT '0'
@@ -68,8 +68,8 @@ CREATE TABLE `app_user` (
 -- Dumping data for table `app_user`
 --
 
-INSERT INTO `app_user` (`kode`, `nip`, `nama`, `jabatan`, `divisi`, `no_hp`, `email`, `password`, `alamat`, `update`, `insert`, `status`) VALUES
-('02', '001', 'Rahmad Nasution', '01', '01', '081225104603', 'rahmadnasution@gmail.com', 'rahmadnet', 'Yogya', '2021-09-10 21:24:58', '2021-09-10 21:24:58', '0');
+INSERT INTO `app_user` (`kode`, `nip`, `nama`, `jabatan`, `no_hp`, `email`, `password`, `alamat`, `role`, `update`, `insert`, `status`) VALUES
+('02', '001', 'Rahmad Nasution', '01', '081225104603', 'rahmadnasution@gmail.com', 'rahmadnet', 'Yogya', 'admin', '2021-09-13 06:29:46', '2021-09-10 21:24:58', '0');
 
 -- --------------------------------------------------------
 
@@ -92,7 +92,7 @@ CREATE TABLE `data_barang` (
 --
 
 INSERT INTO `data_barang` (`kode`, `golongan`, `code`, `nama`, `update`, `insert`, `status`) VALUES
-('01', '01', '001', 'Kursi', '2021-09-10 18:59:11', '2021-09-10 18:59:11', NULL);
+('01', '01', '001', 'Meja', '2021-09-12 00:14:14', '2021-09-10 18:59:11', NULL);
 
 -- --------------------------------------------------------
 
@@ -114,7 +114,7 @@ CREATE TABLE `data_barang_golongan` (
 --
 
 INSERT INTO `data_barang_golongan` (`kode`, `code`, `nama`, `update`, `insert`, `status`) VALUES
-('01', 'G02', 'Peralatan', '2021-09-10 18:54:01', '2021-09-10 18:54:01', NULL);
+('01', 'G01', 'Peralatan', '2021-09-12 00:22:01', '2021-09-10 18:54:01', NULL);
 
 -- --------------------------------------------------------
 
@@ -160,6 +160,22 @@ INSERT INTO `data_divisi` (`kode`, `code`, `nama`, `person_penanggung_jawab`, `b
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `data_divisi_ruang`
+--
+
+CREATE TABLE `data_divisi_ruang` (
+  `kode` varchar(10) NOT NULL DEFAULT '0',
+  `divisi` varchar(10) DEFAULT NULL,
+  `ruang` varchar(10) DEFAULT NULL,
+  `person_penanggung_jawab` varchar(10) DEFAULT NULL,
+  `update` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `insert` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` enum('0','1') NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `data_inventaris`
 --
 
@@ -181,6 +197,13 @@ CREATE TABLE `data_inventaris` (
   `insert` timestamp NULL DEFAULT current_timestamp(),
   `status` enum('0','1') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `data_inventaris`
+--
+
+INSERT INTO `data_inventaris` (`kode`, `code`, `barang`, `harga`, `person_donatur`, `divisi`, `ruang`, `kepemilikan`, `kondisi`, `status_lokasi`, `dokumen`, `person_pencatat`, `tanggal_masuk`, `update`, `insert`, `status`) VALUES
+('01', '001', '01', 100000, '01', '01', '01', '01', 'Bagus', 'Unit Usaha', 'Surat', '01', '2021-09-11', '2021-09-12 01:11:50', '2021-09-12 01:11:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -361,7 +384,6 @@ ALTER TABLE `app_jabatan`
 ALTER TABLE `app_user`
   ADD PRIMARY KEY (`kode`),
   ADD UNIQUE KEY `kode` (`kode`),
-  ADD KEY `divisi` (`divisi`),
   ADD KEY `jabatan` (`jabatan`);
 
 --
@@ -395,6 +417,13 @@ ALTER TABLE `data_divisi`
   ADD PRIMARY KEY (`kode`),
   ADD UNIQUE KEY `kode` (`kode`),
   ADD KEY `person_penanggung_jawab` (`person_penanggung_jawab`);
+
+--
+-- Indexes for table `data_divisi_ruang`
+--
+ALTER TABLE `data_divisi_ruang`
+  ADD PRIMARY KEY (`kode`),
+  ADD UNIQUE KEY `kode` (`kode`);
 
 --
 -- Indexes for table `data_inventaris`
@@ -482,7 +511,6 @@ ALTER TABLE `data_ruang`
 -- Constraints for table `app_user`
 --
 ALTER TABLE `app_user`
-  ADD CONSTRAINT `app_user_ibfk_1` FOREIGN KEY (`divisi`) REFERENCES `data_divisi` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `app_user_ibfk_2` FOREIGN KEY (`jabatan`) REFERENCES `app_jabatan` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
