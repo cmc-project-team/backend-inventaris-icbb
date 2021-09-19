@@ -38,6 +38,10 @@ const app_user = db.define('app_user', {
         type: sequelize.DataTypes.STRING,
         allowNull: true,
     },
+    role:{
+        type: sequelize.DataTypes.STRING,
+        allowNull: true
+    }
 }, {
     freezeTableName: true,
     timestamps: false

@@ -110,7 +110,8 @@ controller.postData = async function (req, res, next) {
         no_hp: req.body.no_hp,
         email: req.body.email,
         password: req.body.password,
-        alamat: req.body.alamat
+        alamat: req.body.alamat,
+        role: req.body.role,
     })  
     res.status(StatusCodes.CREATED).json({
         message: addSuccess,
@@ -134,7 +135,8 @@ controller.updateData = async function (req, res, next) {
         no_hp: req.body.no_hp,
         email: req.body.email,
         password: req.body.password,
-        alamat: req.body.alamat
+        alamat: req.body.alamat,
+        role: req.body.role,
       }, {
           where: {
               kode: req.params.kode
