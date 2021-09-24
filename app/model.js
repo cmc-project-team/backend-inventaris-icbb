@@ -12,7 +12,7 @@ const data_penghapusan = require('../configs/data_penghapusan/model');
 const data_person = require('../configs/data_person/model');
 const data_person_type = require('../configs/data_person_type/model');
 const data_person_connect_type = require('../configs/data_person_connect_type/model');
-const data_riwayat_perlimpahan = require('../configs/data_riwayat_pelimpahan/model');
+const data_riwayat_pelimpahan = require('../configs/data_riwayat_pelimpahan/model');
 const data_ruang = require('../configs/data_ruang/model');
 const model = {};
 
@@ -31,6 +31,6 @@ model.data_penghapusan = data_penghapusan;
 model.data_person = data_person;
 model.data_person_connect_type = data_person_connect_type;
 model.data_person_type = data_person_type;
-model.data_riwayat_perlimpahan = data_riwayat_perlimpahan;
+model.data_riwayat_pelimpahan = data_riwayat_pelimpahan;
 model.data_ruang = data_ruang;
 module.exports= model;

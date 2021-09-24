@@ -34,17 +34,19 @@ data_divisi_ruang.belongsTo(data_person, {
     }
 });
 
-data_divisi_ruang.belongsTo(data_divisi, {
-    foreignKey: {
-        name: 'divisi'
-    }
+data_divisi.belongsToMany(data_ruang, {
+    through: "data_divisi_ruang",
+    as:"data_ruangs",
+    foreignKey: "divisi"
 });
 
-data_divisi_ruang.belongsTo(data_ruang, {
-    foreignKey: {
-        name: 'ruang'
-    }
+data_ruang.belongsToMany(data_divisi, {
+    through: "data_divisi_ruang",
+    as:"data_divisis",
+    foreignKey: "ruang"
 });
+
+
 
 
 

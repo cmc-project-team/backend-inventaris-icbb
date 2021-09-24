@@ -9,6 +9,10 @@ const data_penghapusan = db.define('data_penghapusan', {
         allowNull: true,
         primaryKey: true
     },
+    code : {
+        type: sequelize.DataTypes.STRING,
+        allowNull: true
+    },
     inventaris: {
         type: sequelize.DataTypes.STRING,
         allowNull: true

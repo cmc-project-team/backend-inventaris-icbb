@@ -5,7 +5,7 @@ const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_daur_ulang = await model.data_daur_ulang.findAll();
+        const data_daur_ulang = await model.data_daur_ulang.findAll({include: [model.data_inventaris]});
         if (data_daur_ulang.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
@@ -29,7 +29,8 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_daur_ulang = await model.data_daur_ulang.findAll({
+  const data_daur_ulang = await model.data_daur_ulang.findAll({
+    include: [model.data_inventaris],
         where: {
             kode: req.params.kode
         }

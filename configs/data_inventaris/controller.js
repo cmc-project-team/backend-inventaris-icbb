@@ -5,7 +5,7 @@ const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_inventaris = await model.data_inventaris.findAll();
+        const data_inventaris = await model.data_inventaris.findAll({include: [model.data_person, model.data_divisi, model.data_ruang, model.data_barang]});
         if (data_inventaris.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
@@ -29,7 +29,7 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_inventaris = await model.data_inventaris.findAll({
+    const data_inventaris = await model.data_inventaris.findAll({include: [model.data_person, model.data_divisi, model.data_ruang, model.data_barang],
         where: {
             kode: req.params.kode
         }
@@ -72,7 +72,7 @@ controller.postData = async function (req, res, next) {
           person_pencatat: req.body.person_pencatat,
           tanggal_masuk: req.body.tanggal_masuk,
       })
-      res.status(StatusCodes>CREATED).json({
+      res.status(StatusCodes.CREATED).json({
           message: addSuccess,
           data: data_inventaris
       })

@@ -5,7 +5,7 @@ const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_peminjaman = await model.data_peminjaman.findAll();
+        const data_peminjaman = await model.data_peminjaman.findAll({include:[model.data_barang, model.data_person]});
         if (data_peminjaman.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
@@ -29,7 +29,7 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_peminjaman = await model.data_peminjaman.findAll({
+    const data_peminjaman = await model.data_peminjaman.findAll({include:[model.data_barang, model.data_person],
         where: {
             kode: req.params.kode
         }

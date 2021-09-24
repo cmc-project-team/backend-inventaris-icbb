@@ -22,6 +22,10 @@ const app_user = db.define('app_user', {
         type: sequelize.DataTypes.STRING,
         allowNull: true,
     },
+    divisi: {
+        type: sequelize.DataTypes.STRING,
+        allowNull: true,
+    },
     no_hp: {
         type: sequelize.DataTypes.STRING,
         allowNull: true,
@@ -39,7 +43,7 @@ const app_user = db.define('app_user', {
         allowNull: true,
     },
     role:{
-        type: sequelize.DataTypes.STRING,
+        type: sequelize.DataTypes.INTEGER,
         allowNull: true
     }
 }, {
@@ -50,6 +54,11 @@ const app_user = db.define('app_user', {
 app_user.belongsTo(app_jabatan, {
     foreignKey: {
         name: 'jabatan'
+    }
+});
+app_user.belongsTo(data_divisi, {
+    foreignKey: {
+        name: 'divisi'
     }
 });
 

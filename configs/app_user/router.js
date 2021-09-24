@@ -7,6 +7,8 @@ router.get('/:kode',controller.app_user.getById);
 router.post('/', controller.app_user.postData);
 router.post('/login', controller.app_user.login);
 router.patch('/:kode', controller.app_user.updateData);
+router.patch('/email/:kode', controller.app_user.updateEmail);
+router.patch('/password/:kode', controller.app_user.updatePassword);
 router.delete('/:kode', controller.app_user.deleteData);
 
 

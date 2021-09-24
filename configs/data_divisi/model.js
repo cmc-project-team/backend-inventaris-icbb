@@ -1,6 +1,6 @@
 const sequelize = require('sequelize');
+const  data_person  = require('../data_person/model');
 const db = require('../../db/mysql');
-const data_person = require('../data_person/model');
 
 
 const data_divisi = db.define('data_divisi', {
@@ -17,10 +17,6 @@ const data_divisi = db.define('data_divisi', {
         type: sequelize.DataTypes.STRING,
         allowNull: true
     },
-    person_penanggung_jawab: {
-        type: sequelize.DataTypes.STRING,
-        allowNull: true
-    },
     batas_pengecekan_awal: {
         type: sequelize.DataTypes.DATE,
         allowNull: true
@@ -34,11 +30,6 @@ const data_divisi = db.define('data_divisi', {
     timestamps: false
 });
 
-data_divisi.belongsTo(data_person, {
-    foreignKey: {
-        name: 'person_penanggung_jawab'
-    }
-});
 
 
 

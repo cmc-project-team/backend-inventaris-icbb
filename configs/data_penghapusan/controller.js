@@ -1,10 +1,11 @@
 const model = require('../../app/model');
+const {StatusCodes}= require('http-status-codes');
 const {success, noData, addSuccess, updateSuccess, deleteSuccess}= require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_penghapusan = await model.data_penghapusan.findAll();
+        const data_penghapusan = await model.data_penghapusan.findAll({include:[model.data_inventaris]});
         if (data_penghapusan.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
@@ -28,7 +29,7 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_penghapusan = await model.data_penghapusan.findAll({
+    const data_penghapusan = await model.data_penghapusan.findAll({include: [model.data_inventaris],
         where: {
             kode: req.params.kode
         }

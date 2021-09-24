@@ -5,7 +5,7 @@ const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_barang = await model.data_barang.findAll();
+        const data_barang = await model.data_barang.findAll({include: [model.data_barang_golongan]});
         if (data_barang.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
@@ -29,7 +29,7 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_barang = await model.data_barang.findAll({
+    const data_barang = await model.data_barang.findAll({include: [model.data_barang_golongan],
         where: {
             kode: req.params.kode
         }

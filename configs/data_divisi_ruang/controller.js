@@ -1,19 +1,29 @@
 const model = require('../../app/model');
+const Ruang =  model.data_ruang;
+const Divisi =  model.data_divisi;
 const {StatusCodes}= require('http-status-codes');
 const { success, noData, addSuccess, updateSuccess, deleteSuccess } = require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_divisi_ruang = await model.data_divisi_ruang.findAll();
-        if (data_divisi_ruang.length > 0) {
+        const divisi = await Divisi.findAll({
+          include:[{
+            model: Ruang,
+            as: "data_ruangs",
+            through:{
+              attributes:[],
+            }
+          },],
+        });
+        if (divisi.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
             message: success,
-            data: data_divisi_ruang
+            data: divisi
           })
         } else {
-          res.status(StatusCodes.CREATED).json({
+          res.status(StatusCodes.OK).json({
             status: true,
             message: noData,
             data: []
@@ -29,16 +39,22 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_divisi_ruang = await model.data_divisi_ruang.findAll({
-        where: {
-            kode: req.params.kode
-        }
-    })
-    if (data_divisi_ruang.length > 0) {
+    const divisi = await Divisi.findAll({ where: {
+      kode: req.params.kode
+  },
+          include:[{
+            model: Ruang,
+            as: "data_ruangs",
+            through:{
+              attributes:[],
+            }
+          },],
+        });
+    if (divisi.length > 0) {
       res.status(StatusCodes.CREATED).json({
         status: true,
         message: success,
-        data: data_divisi_ruang
+        data: divisi
       })
     } else {
       res.status(StatusCodes.CREATED).json({
@@ -57,7 +73,7 @@ controller.getById = async function (req, res, next) {
 
 controller.postData = async function (req, res, next) {
   try {
-      const data_divisi_ruang = await model.data_divisi_ruang.CREATED({
+      const data_divisi_ruang = await model.data_divisi_ruang.create({
           kode: req.body.kode,
           divisi: req.body.divisi,
           ruang: req.body.ruang,
@@ -105,7 +121,7 @@ controller.deleteData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
-      res.status(StatusCodes.CREATED).json({
+      res.status(StatusCodes.OK).json({
           message: deleteSuccess,
           data: data_divisi_ruang
       })

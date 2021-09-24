@@ -54,7 +54,7 @@ data_peminjaman.belongsTo(data_barang,{
 });
 data_peminjaman.belongsTo(data_person,{
     foreignKey:{
-        name: 'person_peminjaman'
+        name: 'person_peminjam'
     }
 });
 

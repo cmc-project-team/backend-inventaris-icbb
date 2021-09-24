@@ -5,7 +5,7 @@ const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_person_connect_type = await model.data_person_connect_type.findAll();
+        const data_person_connect_type = await model.data_person_connect_type.findAll({include: [model.data_person, model.data_person_type]});
         if (data_person_connect_type.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
@@ -29,7 +29,7 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_person_connect_type = await model.data_person_connect_type.findAll({ 
+    const data_person_connect_type = await model.data_person_connect_type.findAll({ include: [model.data_person, model.data_person_type],
         where: {
             kode: req.params.kode
         }

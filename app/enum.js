@@ -10,7 +10,6 @@ const errr = "Erorr: ";
 const loginSuccess = "user berhasil login";
 const worngPassword = "password salah ";
 const noAuth = "NO AUTH";
-const connect = "koneksi berhasil";
 
 module.exports = {
     success,
@@ -24,6 +23,5 @@ module.exports = {
     errr,
     loginSuccess,
     worngPassword,
-    noAuth,
-    connect
+    noAuth
 }

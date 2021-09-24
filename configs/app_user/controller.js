@@ -6,6 +6,7 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const {StatusCodes} = require('http-status-codes');
 const {success, noData, addSuccess, updateSuccess, deleteSuccess, emailAlready, noEmail, exCookie, err, errr, loginSuccess, worngPassword, noAuth} = require('../../app/enum');
+const app_jabatan = require('../../app/model');
 const controller = {};
 
 let ExtractJwt = passportJWT.ExtractJwt;
@@ -36,9 +37,47 @@ const getUser = async kode => {
   });
 };
 
+controller.login = async function (req, res, next) {
+  try {
+
+    const {email, password} = req.body;
+    
+    if(email && password) {
+      let login = await getUser({email: email});
+      if(!login){
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: noEmail});
+      };
+      
+      delete login.password;
+
+      if(login.password ===  password) {
+        let payload = { 
+          kode: login.kode};
+          const user = await model.app_user.findAll({ include: [model.data_divisi, model.app_jabatan]})
+        
+        let token = jwt.sign( payload, jwtOptions.secretOrKey,{expiresIn: '24h'} );
+        const limit = new Date(Date.now() + (1 * 3600000));
+        res.cookie(exCookie, token, {
+          httpOnly: true,
+          expires: limit,
+          maxAges: limit
+        });
+        res.json({ message: loginSuccess, token: token, user});
+      } else {
+        res.status(StatusCodes.UNAUTHORIZED).json({ message: worngPassword});
+      };
+    } else{
+      res.status(StatusCodes.UNAUTHORIZED).json({ message: noAuth});
+    }
+
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ message: error.message});
+  }
+}
+
 controller.getAll = async function (req, res , next) {
   try {
-        const app_user = await model.app_user.findAll();
+        const app_user = await model.app_user.findAll({include: [model.app_jabatan, model.data_divisi]});
         if (app_user.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
@@ -62,7 +101,7 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const app_user = await model.app_user.findAll({
+    const app_user = await model.app_user.findAll({include: [model.app_jabatan, model.data_divisi],
         where: {
             kode: req.params.kode
         }
@@ -99,14 +138,13 @@ controller.postData = async function (req, res, next) {
       if (alreadyExistsUser) {
         return res.status(409).json({ message: emailAlready });
       }
-    // const hash = await bcrypt.hash(req.body.password, 10);
-  
 
     const app_user = await model.app_user.create({
         kode: req.body.kode,
         nip: req.body.nip,
         nama: req.body.nama,
         jabatan: req.body.jabatan,
+        divisi: req.body.divisi,
         no_hp: req.body.no_hp,
         email: req.body.email,
         password: req.body.password,
@@ -128,13 +166,11 @@ controller.postData = async function (req, res, next) {
 controller.updateData = async function (req, res, next) {
   try {
       const app_user = await model.app_user.update({
-        kode: req.body.kode,
         nip: req.body.nip,
         nama: req.body.nama,
         jabatan: req.body.jabatan,
+        divisi: req.body.divisi,
         no_hp: req.body.no_hp,
-        email: req.body.email,
-        password: req.body.password,
         alamat: req.body.alamat,
         role: req.body.role,
       }, {
@@ -145,6 +181,66 @@ controller.updateData = async function (req, res, next) {
       res.status(StatusCodes.OK).json({
           message: updateSuccess,
           data: app_user
+      })
+  } catch (error) {
+      res.status(StatusCodes.NOT_FOUND).json({
+          message: error.message
+      })
+  }
+};
+
+controller.updateEmail = async function (req, res, next) {
+  try {
+    const {email, password} = req.body;
+    const alreadyExistsUser = await model.app_user.findOne({ where: { email: req.body.email } }).catch(
+      (err) => {
+        console.log(errr, err);
+      }
+      );
+      
+      if (alreadyExistsUser) {
+        return res.status(409).json({ message: emailAlready });
+      }
+      const update = await model.app_user.findOne();
+      if(update.password ===  password){
+      const app_user = await model.app_user.update({
+        email,
+        password
+      }, {
+          where: {
+              kode: req.params.kode
+          }
+      })
+        let user = await model.app_user.findOne();
+        res.status(StatusCodes.OK).json({
+            message: updateSuccess,
+            data: user
+        })
+      } else {
+        res.status(StatusCodes.NOT_FOUND).json({
+          message: worngPassword
+      })
+      }
+  } catch (error) {
+      res.status(StatusCodes.NOT_FOUND).json({
+          message: error.message
+      })
+  }
+};
+
+controller.updatePassword = async function (req, res, next) {
+  try {
+      const app_user = await model.app_user.update({
+        password: req.body.password
+      }, {
+          where: {
+              kode: req.params.kode
+          }
+      })
+      let user = await model.app_user.findOne();
+      res.status(StatusCodes.OK).json({
+          message: updateSuccess,
+          data: user
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({
@@ -171,42 +267,6 @@ controller.deleteData = async function (req, res, next) {
   }
 };
 
-controller.login = async function (req, res, next) {
-  try {
 
-    
-    const {email, password} = req.body;
-    
-    if(email && password) {
-      let login = await getUser({email: email});
-      // print("signin");
-      if(!login){
-        return res.status(StatusCodes.BAD_REQUEST).json({ message: noEmail});
-      };
-      
-      delete login.password;
-
-      if(login.password ===  password) {
-        let payload = { kode: login.kode};
-        
-        let token = jwt.sign( payload, jwtOptions.secretOrKey,{expiresIn: '24h'} );
-        const limit = new Date(Date.now() + (1 * 3600000));
-        res.cookie(exCookie, token, {
-          httpOnly: true,
-          expires: limit,
-          maxAges: limit
-        });
-        res.json({ message: loginSuccess, token: token });
-      } else {
-        res.status(StatusCodes.UNAUTHORIZED).json({ message: worngPassword});
-      };
-    } else{
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: noAuth});
-    }
-
-  } catch (error) {
-    res.status(StatusCodes.NOT_FOUND).json({ message: error.message});
-  }
-}
 
 module.exports = controller;

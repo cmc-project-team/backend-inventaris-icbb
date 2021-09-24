@@ -5,6 +5,7 @@ const {connect} = require('./db/mysql');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const session = require('express-session');
+const cors = require('cors');
 const jabatanRouter = require('./configs/app_jabatan/router');
 const userRouter = require('./configs/app_user/router');
 const barangRouter = require('./configs/data_barang/router');
@@ -22,15 +23,7 @@ const personconnectRouter = require('./configs/data_person_connect_type/router')
 const riwyatpelimpahanRouter = require('./configs/data_riwayat_pelimpahan/router');
 const ruangRouter = require('./configs/data_ruang/router');
 
-app.use((req,res,next) =>{
-    res.header('Access-Control-Allow-origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, x-Requested-With, Conten-Type, Sccept, Authorization');
-    if(req.method === 'OPTIONS'){
-        res.header('Access-Control-allow-Methods', 'PUT, POST, PATCH', 'DELETE', 'GET');
-        return res.status(200).json({})
-    }
-    next();
-});
+
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -44,6 +37,20 @@ app.use(
           saveUninitialized: false,
       })
     );
+    app.use(cors());
+
+    // Request Config
+// app.use((req,res,next)=>{
+
+//     res.header("Access-Control-Allow-Origin","*");
+//     res.header("Access-Control-Allow-Headers",
+//     "Origin,X-Requested-With,Content-Type,Accept,Authorization");
+//     if (req.method==='OPTIONS'){
+//         res.header('Access-Control-Allow-Methods','PUT,POST,PATCH,DELETE,GET');
+//         return res.status(200).json({});
+//     }
+// next();
+// });
 
 // Api
 app.use('/jabatan', jabatanRouter);

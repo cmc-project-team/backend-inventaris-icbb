@@ -5,7 +5,7 @@ const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_riwayat_pelimpahan = await model.data_riwayat_pelimpahan.findAll();
+        const data_riwayat_pelimpahan = await model.data_riwayat_pelimpahan.findAll({include:[model.data_inventaris, model.data_divisi, model.data_ruang]});
         if (data_riwayat_pelimpahan.length > 0) {
           res.status(StatusCodes.OK).json({
             status: true,
@@ -29,7 +29,7 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_riwayat_pelimpahan = await model.data_riwayat_pelimpahan.findAll({
+    const data_riwayat_pelimpahan = await model.data_riwayat_pelimpahan.findAll({include:[model.data_inventaris, model.data_divisi, model.data_ruang],
         where: {
             kode: req.params.kode
         }
