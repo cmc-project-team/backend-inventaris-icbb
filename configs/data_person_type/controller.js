@@ -1,6 +1,6 @@
 const model = require('../../app/model');
 const {StatusCodes} = require('http-status-codes');
-const {success, noData, addSuccess, updateSuccess, deleteSuccess}= require('../../app/enum');
+const {success, noData, addSuccess, updateSuccess, deleteSuccess, failed, getData}= require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
@@ -8,20 +8,20 @@ controller.getAll = async function (req, res , next) {
         const data_person_type = await model.data_person_type.findAll();
         if (data_person_type.length > 0) {
           res.status(StatusCodes.OK).json({
-            status: true,
-            message: success,
+            status: success,
+            message: getData,
             data: data_person_type
           })
         } else {
           res.status(StatusCodes.OK).json({
-            status: true,
+            status: success,
             message: noData,
             data: []
           })
         }
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).json({
-      status: false,
+      status: failed,
       message: error.message
     })
   };
@@ -36,20 +36,20 @@ controller.getById = async function (req, res, next) {
     })
     if (data_person_type.length > 0) {
       res.status(StatusCodes.OK).json({
-        status: true,
-        message: success,
+        status: success,
+        message: getData,
         data: data_person_type
       })
     } else {
       res.status(StatusCodes.OK).json({
-        status: true,
+        status: success,
         message: noData,
         data: []
       })
     }
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).json({
-      status: false,
+      status: failed,
       message: error.message
     })
   }
@@ -62,11 +62,13 @@ controller.postData = async function (req, res, next) {
           nama: req.body.nama,
       })
       res.status(StatusCodes.CREATED).json({
+          status: success,
           message: addSuccess,
           data: data_person_type
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({
+          status: failed,
           message: error.message
       })
   };
@@ -83,12 +85,19 @@ controller.updateData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
+      const type = await model.data_person_type.findAll({
+        where: {
+            kode: req.params.kode
+        }
+      })
       res.status(StatusCodes.OK).json({
+          status: success,
           message: updateSuccess,
-          data: data_person_type
+          data: type
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({
+          status: failed,
           message: error.message
       })
   }
@@ -102,11 +111,13 @@ controller.deleteData = async function (req, res, next) {
           }
       })
       res.status(StatusCodes.OK).json({
+          status: success,
           message: deleteSuccess,
           data: data_person_type
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({
+          status: failed,
           message: error.message
       })
   }

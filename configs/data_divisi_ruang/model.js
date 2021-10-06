@@ -1,7 +1,7 @@
 const sequelize = require('sequelize');
+const  app_user  = require('../app_user/model');
 const db = require('../../db/mysql');
 const data_divisi = require('../data_divisi/model');
-const data_person = require('../data_person/model');
 const data_ruang = require('../data_ruang/model');
 
 
@@ -28,9 +28,21 @@ const data_divisi_ruang = db.define('data_divisi_ruang', {
     timestamps: false
 });
 
-data_divisi_ruang.belongsTo(data_person, {
+data_divisi_ruang.belongsTo(app_user, {
     foreignKey: {
         name: 'person_penanggung_jawab'
+    }
+});
+
+data_divisi_ruang.belongsTo(data_divisi, {
+    foreignKey: {
+        name: 'divisi'
+    }
+});
+
+data_divisi_ruang.belongsTo(data_ruang, {
+    foreignKey: {
+        name: 'ruang'
     }
 });
 
@@ -51,5 +63,4 @@ data_ruang.belongsToMany(data_divisi, {
 
 
 
-// area.removeAttribute('id');
 module.exports = data_divisi_ruang;

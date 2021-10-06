@@ -38,5 +38,4 @@ data_penghapusan.belongsTo(data_inventaris,{
 
 
 
-// area.removeAttribute('id');
 module.exports = data_penghapusan;

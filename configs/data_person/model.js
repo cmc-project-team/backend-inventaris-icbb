@@ -28,5 +28,4 @@ const data_person = db.define('data_person', {
 
 
 
-// area.removeAttribute('id');
 module.exports = data_person;

@@ -16,22 +16,12 @@ const data_ruang = db.define('data_ruang', {
     nama: {
         type: sequelize.DataTypes.STRING,
         allowNull: true
-    },
-    person: {
-        type: sequelize.DataTypes.STRING,
-        allowNull: true
     }
 }, {
     freezeTableName: true,
     timestamps: false
 });
 
-data_ruang.belongsTo(data_person,{
-    foreignKey: {
-        name: 'person'
-    }
-});
 
 
-// area.removeAttribute('id');
 module.exports = data_ruang;

@@ -5,15 +5,12 @@ const {StatusCodes} = require('http-status-codes');
 const { noAuth } = require('../../app/enum');
 
 const isAuth = async(req, res, next) => {
-    // const auth = req.cookies["expresscookie"];
-    // console.log(cookies);
     var can_go = false;
-    // if(auth != null){
         try {
             const token = req.headers.authorization.split(" ") [1];
             const data = jwt.verify(token, process.env.JWT_SECRET);
             const kode = data.kode;
-            const user = await model.app_user.findOne({
+            const user = await model.app_user.findOne({include: [model.data_divisi, model.app_jabatan],
                 where : {
                     kode: kode
                 }
@@ -21,14 +18,12 @@ const isAuth = async(req, res, next) => {
             console.log(user, data);
             if (user != null && user.kode == kode) {
                 can_go = true;
+                req.session.user = user;
             }
-            // console.log("berhasil",data,user)
         } catch (e) {
             console.log(e);
         }
-    // } 
-    
-    
+        
     if (can_go) {
         next();
     } else {

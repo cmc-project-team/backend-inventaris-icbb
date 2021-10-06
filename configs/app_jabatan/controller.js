@@ -1,5 +1,5 @@
 const model = require('../../app/model');
-const {success, noData, addSuccess, updateSuccess, deleteSuccess} = require('../../app/enum');
+const {success, noData, addSuccess, updateSuccess, deleteSuccess, getData} = require('../../app/enum');
 const {StatusCodes} = require('http-status-codes');
 const controller = {};
 
@@ -8,13 +8,13 @@ controller.getAll = async function (req, res , next) {
         const app_jabatan = await model.app_jabatan.findAll();
         if (app_jabatan.length > 0) {
           res.status(StatusCodes.OK).json({
-            status: true,
-            message: success,
+            status: success,
+            message: getData,
             data: app_jabatan
           })
         } else {
           res.status(StatusCodes.OK).json({
-            status: true,
+            status: success,
             message: noData,
             data: []
           })
@@ -36,13 +36,13 @@ controller.getById = async function (req, res, next) {
     })
     if (app_jabatan.length > 0) {
       res.status(StatusCodes.OK).json({
-        status: true,
-        message: success,
+        status: success,
+        message: getData,
         data: app_jabatan
       })
     } else {
       res.status(StatusCodes.OK).json({
-        status: true,
+        status: success,
         message: noData,
         data: []
       })
@@ -82,9 +82,14 @@ controller.updateData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
+      const jabatan = await model.app_jabatan.findAll({
+        where: {
+            kode: req.params.kode
+        }
+      })
       res.status(StatusCodes.OK).json({
           message: updateSuccess,
-          data: app_jabatan
+          data: jabatan
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({

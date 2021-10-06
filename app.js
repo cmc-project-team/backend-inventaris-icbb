@@ -1,10 +1,10 @@
 const express = require('express');
-const app = express();
-const router = express.Router();
 const {connect} = require('./db/mysql');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const session = require('express-session');
+const multer = require('multer');
+const upload = multer();
 const cors = require('cors');
 const jabatanRouter = require('./configs/app_jabatan/router');
 const userRouter = require('./configs/app_user/router');
@@ -24,9 +24,15 @@ const riwyatpelimpahanRouter = require('./configs/data_riwayat_pelimpahan/router
 const ruangRouter = require('./configs/data_ruang/router');
 
 
+const app = express();
+const router = express.Router();
+
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use('/uploads',express.static('uploads'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(upload.any());
+
 app.use(
     session({
       cookie: {

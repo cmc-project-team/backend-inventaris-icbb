@@ -3,6 +3,7 @@ const router = express.Router();
 const controller = require('../../app/controller');
 const isAuth = require('../app_user/Auth');
 
+
 router.get('/',isAuth, controller.data_inventaris.getAll);
 router.get('/:kode',isAuth,controller.data_inventaris.getById);
 router.post('/',isAuth, controller.data_inventaris.postData);

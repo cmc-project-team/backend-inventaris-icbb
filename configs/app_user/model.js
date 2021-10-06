@@ -66,5 +66,4 @@ app_user.belongsTo(data_divisi, {
 
 
 
-// area.removeAttribute('id');
 module.exports = app_user;

@@ -4,9 +4,9 @@ const db = require('../../db/mysql');
 
 const data_barang_golongan = db.define('data_barang_golongan', {
     kode: {
-        type: sequelize.DataTypes.STRING,
+        type: sequelize.DataTypes.INTEGER,
         allowNull: true,
-        primaryKey: true
+        primaryKey: true,
     },
     code: {
         type: sequelize.DataTypes.STRING,
@@ -24,5 +24,4 @@ const data_barang_golongan = db.define('data_barang_golongan', {
 
 
 
-// area.removeAttribute('id');
 module.exports = data_barang_golongan;

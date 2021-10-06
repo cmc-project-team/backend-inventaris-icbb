@@ -27,16 +27,17 @@ const data_daur_ulang = db.define('data_daur_ulang', {
 });
 
 data_daur_ulang.belongsTo(data_inventaris, {
+    as: 'lama',
     foreignKey: {
         name: 'inventaris_lama'
     }
 });
 data_daur_ulang.belongsTo(data_inventaris,{
+    as: 'baru',
     foreignKey:{
         name: 'inventaris_baru'
     }
 });
 
 
-// area.removeAttribute('id');
 module.exports = data_daur_ulang;

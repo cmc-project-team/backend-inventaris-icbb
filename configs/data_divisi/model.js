@@ -34,5 +34,4 @@ const data_divisi = db.define('data_divisi', {
 
 
 
-// area.removeAttribute('id');
 module.exports = data_divisi;

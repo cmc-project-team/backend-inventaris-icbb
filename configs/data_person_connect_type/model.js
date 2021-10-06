@@ -37,5 +37,4 @@ data_person_connect_type.belongsTo(data_person_type,{
 
 
 
-// area.removeAttribute('id');
 module.exports = data_person_connect_type;

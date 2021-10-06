@@ -50,5 +50,4 @@ data_riwayat_pelimpahan.belongsTo(data_ruang,{
 
 
 
-// area.removeAttribute('id');
 module.exports = data_riwayat_pelimpahan;

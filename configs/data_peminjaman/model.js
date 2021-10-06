@@ -61,5 +61,4 @@ data_peminjaman.belongsTo(data_person,{
 
 
 
-// area.removeAttribute('id');
 module.exports = data_peminjaman;

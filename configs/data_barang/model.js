@@ -7,7 +7,7 @@ const data_barang = db.define('data_barang', {
     kode: {
         type: sequelize.DataTypes.STRING,
         allowNull: true,
-        primaryKey: true
+        primaryKey: true,
     },
     golongan: {
         type: sequelize.DataTypes.STRING,
@@ -35,5 +35,4 @@ data_barang.belongsTo(data_barang_golongan, {
 
 
 
-// area.removeAttribute('id');
 module.exports = data_barang;

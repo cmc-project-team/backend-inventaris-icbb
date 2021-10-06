@@ -44,5 +44,4 @@ data_pengecekan.belongsTo(data_person,{
 
 
 
-// area.removeAttribute('id');
 module.exports = data_pengecekan;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 13, 2021 at 10:31 AM
+-- Generation Time: Oct 06, 2021 at 04:38 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.4.23
 
@@ -54,6 +54,7 @@ CREATE TABLE `app_user` (
   `nip` varchar(30) DEFAULT NULL,
   `nama` varchar(50) DEFAULT NULL,
   `jabatan` varchar(10) DEFAULT NULL,
+  `divisi` varchar(10) NOT NULL,
   `no_hp` varchar(15) DEFAULT NULL,
   `email` varchar(30) DEFAULT NULL,
   `password` varchar(500) NOT NULL,
@@ -68,8 +69,8 @@ CREATE TABLE `app_user` (
 -- Dumping data for table `app_user`
 --
 
-INSERT INTO `app_user` (`kode`, `nip`, `nama`, `jabatan`, `no_hp`, `email`, `password`, `alamat`, `role`, `update`, `insert`, `status`) VALUES
-('02', '001', 'Rahmad Nasution', '01', '081225104603', 'rahmadnasution@gmail.com', 'rahmadnet', 'Yogya', 'admin', '2021-09-13 06:29:46', '2021-09-10 21:24:58', '0');
+INSERT INTO `app_user` (`kode`, `nip`, `nama`, `jabatan`, `divisi`, `no_hp`, `email`, `password`, `alamat`, `role`, `update`, `insert`, `status`) VALUES
+('01', '001', 'Rahmad', '02', '01', '081225104603', 'rahmad@gmail.com', '$2b$10$aDSqmk.0fs7cumOdSX.al.RNsEDy/IJ2g43TgfwUDb51.yWIB/jEy', 'Yogya', '1', '2021-10-06 14:24:52', '2021-10-06 14:24:52', '0');
 
 -- --------------------------------------------------------
 
@@ -142,7 +143,6 @@ CREATE TABLE `data_divisi` (
   `kode` varchar(10) NOT NULL,
   `code` varchar(30) DEFAULT NULL,
   `nama` varchar(50) DEFAULT NULL,
-  `person_penanggung_jawab` varchar(10) DEFAULT NULL,
   `batas_pengecekan_awal` date DEFAULT NULL,
   `batas_pengecekan_akhir` date DEFAULT NULL,
   `update` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -154,8 +154,8 @@ CREATE TABLE `data_divisi` (
 -- Dumping data for table `data_divisi`
 --
 
-INSERT INTO `data_divisi` (`kode`, `code`, `nama`, `person_penanggung_jawab`, `batas_pengecekan_awal`, `batas_pengecekan_akhir`, `update`, `insert`, `status`) VALUES
-('01', '01', 'Unin Usaha', '01', '2021-09-10', '2021-09-19', '2021-09-10 20:13:07', '2021-09-10 20:13:07', NULL);
+INSERT INTO `data_divisi` (`kode`, `code`, `nama`, `batas_pengecekan_awal`, `batas_pengecekan_akhir`, `update`, `insert`, `status`) VALUES
+('01', '01', 'yayasan', '2021-09-21', '2021-09-30', '2021-10-06 14:24:24', '2021-10-06 14:24:24', NULL);
 
 -- --------------------------------------------------------
 
@@ -164,13 +164,13 @@ INSERT INTO `data_divisi` (`kode`, `code`, `nama`, `person_penanggung_jawab`, `b
 --
 
 CREATE TABLE `data_divisi_ruang` (
-  `kode` varchar(10) NOT NULL DEFAULT '0',
-  `divisi` varchar(10) DEFAULT NULL,
-  `ruang` varchar(10) DEFAULT NULL,
-  `person_penanggung_jawab` varchar(10) DEFAULT NULL,
+  `kode` varchar(10) CHARACTER SET latin1 NOT NULL DEFAULT '0',
+  `divisi` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
+  `ruang` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
+  `person_penanggung_jawab` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
   `update` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `insert` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` enum('0','1') NOT NULL DEFAULT '0'
+  `status` enum('0','1') CHARACTER SET latin1 NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -186,10 +186,9 @@ CREATE TABLE `data_inventaris` (
   `harga` double DEFAULT NULL,
   `person_donatur` varchar(10) DEFAULT NULL,
   `divisi` varchar(10) DEFAULT NULL,
-  `ruang` varchar(10) DEFAULT NULL,
+  `lokasi` varchar(10) NOT NULL,
   `kepemilikan` varchar(10) DEFAULT NULL,
   `kondisi` varchar(30) DEFAULT NULL,
-  `status_lokasi` varchar(10) DEFAULT NULL,
   `dokumen` varchar(10) DEFAULT NULL,
   `person_pencatat` varchar(10) DEFAULT NULL,
   `tanggal_masuk` date DEFAULT NULL,
@@ -197,13 +196,6 @@ CREATE TABLE `data_inventaris` (
   `insert` timestamp NULL DEFAULT current_timestamp(),
   `status` enum('0','1') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `data_inventaris`
---
-
-INSERT INTO `data_inventaris` (`kode`, `code`, `barang`, `harga`, `person_donatur`, `divisi`, `ruang`, `kepemilikan`, `kondisi`, `status_lokasi`, `dokumen`, `person_pencatat`, `tanggal_masuk`, `update`, `insert`, `status`) VALUES
-('01', '001', '01', 100000, '01', '01', '01', '01', 'Bagus', 'Unit Usaha', 'Surat', '01', '2021-09-11', '2021-09-12 01:11:50', '2021-09-12 01:11:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -384,7 +376,8 @@ ALTER TABLE `app_jabatan`
 ALTER TABLE `app_user`
   ADD PRIMARY KEY (`kode`),
   ADD UNIQUE KEY `kode` (`kode`),
-  ADD KEY `jabatan` (`jabatan`);
+  ADD KEY `jabatan` (`jabatan`),
+  ADD KEY `divisi` (`divisi`);
 
 --
 -- Indexes for table `data_barang`
@@ -415,15 +408,16 @@ ALTER TABLE `data_daur_ulang`
 --
 ALTER TABLE `data_divisi`
   ADD PRIMARY KEY (`kode`),
-  ADD UNIQUE KEY `kode` (`kode`),
-  ADD KEY `person_penanggung_jawab` (`person_penanggung_jawab`);
+  ADD UNIQUE KEY `kode` (`kode`);
 
 --
 -- Indexes for table `data_divisi_ruang`
 --
 ALTER TABLE `data_divisi_ruang`
   ADD PRIMARY KEY (`kode`),
-  ADD UNIQUE KEY `kode` (`kode`);
+  ADD UNIQUE KEY `kode` (`kode`),
+  ADD KEY `divisi` (`divisi`),
+  ADD KEY `ruang` (`ruang`);
 
 --
 -- Indexes for table `data_inventaris`
@@ -435,7 +429,7 @@ ALTER TABLE `data_inventaris`
   ADD KEY `divisi` (`divisi`),
   ADD KEY `person_donatur` (`person_donatur`),
   ADD KEY `person_pencatat` (`person_pencatat`),
-  ADD KEY `ruang` (`ruang`);
+  ADD KEY `data_inventaris_ibfk_5` (`lokasi`);
 
 --
 -- Indexes for table `data_peminjaman`
@@ -443,7 +437,8 @@ ALTER TABLE `data_inventaris`
 ALTER TABLE `data_peminjaman`
   ADD PRIMARY KEY (`kode`),
   ADD UNIQUE KEY `kode` (`kode`),
-  ADD KEY `barang` (`barang`);
+  ADD KEY `barang` (`barang`),
+  ADD KEY `person_peminjam` (`person_peminjam`);
 
 --
 -- Indexes for table `data_pengecekan`
@@ -511,7 +506,8 @@ ALTER TABLE `data_ruang`
 -- Constraints for table `app_user`
 --
 ALTER TABLE `app_user`
-  ADD CONSTRAINT `app_user_ibfk_2` FOREIGN KEY (`jabatan`) REFERENCES `app_jabatan` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `app_user_ibfk_2` FOREIGN KEY (`jabatan`) REFERENCES `app_jabatan` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `app_user_ibfk_3` FOREIGN KEY (`divisi`) REFERENCES `data_divisi` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `data_barang`
@@ -527,10 +523,11 @@ ALTER TABLE `data_daur_ulang`
   ADD CONSTRAINT `data_daur_ulang_ibfk_2` FOREIGN KEY (`inventaris_lama`) REFERENCES `data_inventaris` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `data_divisi`
+-- Constraints for table `data_divisi_ruang`
 --
-ALTER TABLE `data_divisi`
-  ADD CONSTRAINT `data_divisi_ibfk_1` FOREIGN KEY (`person_penanggung_jawab`) REFERENCES `data_person` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `data_divisi_ruang`
+  ADD CONSTRAINT `data_divisi_ruang_ibfk_1` FOREIGN KEY (`divisi`) REFERENCES `data_divisi` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_divisi_ruang_ibfk_2` FOREIGN KEY (`ruang`) REFERENCES `data_ruang` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `data_inventaris`
@@ -540,13 +537,14 @@ ALTER TABLE `data_inventaris`
   ADD CONSTRAINT `data_inventaris_ibfk_2` FOREIGN KEY (`divisi`) REFERENCES `data_divisi` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `data_inventaris_ibfk_3` FOREIGN KEY (`person_donatur`) REFERENCES `data_person` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `data_inventaris_ibfk_4` FOREIGN KEY (`person_pencatat`) REFERENCES `data_person` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `data_inventaris_ibfk_5` FOREIGN KEY (`ruang`) REFERENCES `data_ruang` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `data_inventaris_ibfk_5` FOREIGN KEY (`lokasi`) REFERENCES `data_divisi_ruang` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `data_peminjaman`
 --
 ALTER TABLE `data_peminjaman`
-  ADD CONSTRAINT `data_peminjaman_ibfk_1` FOREIGN KEY (`barang`) REFERENCES `data_barang` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `data_peminjaman_ibfk_1` FOREIGN KEY (`barang`) REFERENCES `data_barang` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `data_peminjaman_ibfk_2` FOREIGN KEY (`person_peminjam`) REFERENCES `data_person` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `data_pengecekan`

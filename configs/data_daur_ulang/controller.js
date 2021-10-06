@@ -1,27 +1,87 @@
 const model = require('../../app/model');
 const {StatusCodes} = require('http-status-codes');
-const {success, noData, addSuccess, updateSuccess, deleteSuccess} = require('../../app/enum');
+const {success, noData, addSuccess, updateSuccess, deleteSuccess, getData, failed} = require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_daur_ulang = await model.data_daur_ulang.findAll({include: [model.data_inventaris]});
-        if (data_daur_ulang.length > 0) {
-          res.status(StatusCodes.OK).json({
-            status: true,
-            message: success,
-            data: data_daur_ulang
-          })
-        } else {
-          res.status(StatusCodes.OK).json({
-            status: true,
-            message: noData,
-            data: []
-          })
-        }
+    const inventaris = await model.data_inventaris;
+    const divisi_ruang = await model.data_divisi_ruang;
+    const divisi = await model.data_divisi;
+    const ruang = await model.data_ruang;
+    const pencatat = await model.app_user;
+    const jabatan = await model.app_jabatan;
+    const person = await model.data_person;
+    const data_daur_ulang = await model.data_daur_ulang.findAll({include: 
+    [
+      {
+        model: inventaris, as: 'lama', 
+          include: 
+          [
+            model.data_barang,
+            {
+              model: person, 
+              model: person, 
+              as: 'donatur'
+            },
+              model.data_divisi,
+            {
+              model: divisi_ruang,
+              include: [divisi, ruang, {model: pencatat, include:[divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat', 'role', 'email']}]
+            },
+            {
+              model: divisi,
+              as: 'pemilik'
+            },
+            {
+              model: pencatat,
+              include: [divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat']
+            }
+          ]
+      },
+      {
+        model: inventaris, as: 'baru', 
+          include: 
+          [
+            model.data_barang,
+            {
+              model: person, 
+              as: 'donatur'
+            },
+              model.data_divisi,
+            {
+              model: divisi_ruang,
+              include: [divisi, ruang, {model: pencatat, include:[divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat', 'role', 'email']}]
+            },
+            {
+              model: divisi,
+              as: 'pemilik'
+            },
+            {
+              model: pencatat,
+              include: [divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat', 'role', 'email']
+            }
+          ]
+      }
+    ]
+}
+);
+    if (data_daur_ulang.length > 0) {
+      res.status(StatusCodes.OK).json({
+        status: success,
+        message: getData,
+        data: data_daur_ulang
+      })
+    } else {
+      res.status(StatusCodes.OK).json({
+        status: success,
+        message: noData,
+        data: []
+      })
+    }
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).json({
-      status: false,
+      status: failed,
       message: error.message
     })
   };
@@ -29,28 +89,86 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-  const data_daur_ulang = await model.data_daur_ulang.findAll({
-    include: [model.data_inventaris],
+    const inventaris = await model.data_inventaris;
+    const divisi_ruang = await model.data_divisi_ruang;
+    const divisi = await model.data_divisi;
+    const ruang = await model.data_ruang;
+    const pencatat = await model.app_user;
+    const jabatan = await model.app_jabatan;
+    const person = await model.data_person;
+    const data_daur_ulang = await model.data_daur_ulang.findAll({
+      include: 
+      [
+        {
+          model: inventaris, as: 'lama', 
+            include: 
+            [
+              model.data_barang,
+              {
+                model: person, 
+                model: person, 
+                as: 'donatur'
+              },
+                model.data_divisi,
+              {
+                model: divisi_ruang,
+                include: [divisi, ruang, {model: pencatat, include:[divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat', 'role', 'email']}]
+              },
+              {
+                model: divisi,
+                as: 'pemilik'
+              },
+              {
+                model: pencatat,
+                include: [divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat']
+              }
+            ]
+        },
+        {
+          model: inventaris, as: 'baru', 
+            include: 
+            [
+              model.data_barang,
+              {
+                model: person, 
+                as: 'donatur'
+              },
+                model.data_divisi,
+              {
+                model: divisi_ruang,
+                include: [divisi, ruang, {model: pencatat, include:[divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat', 'role', 'email']}]
+              },
+              {
+                model: divisi,
+                as: 'pemilik'
+              },
+              {
+                model: pencatat,
+                include: [divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat']
+              }
+            ]
+        }
+      ],
         where: {
             kode: req.params.kode
         }
     })
     if (data_daur_ulang.length > 0) {
       res.status(StatusCodes.OK).json({
-        status: true,
-        message: success,
+        status: success,
+        message: getData,
         data: data_daur_ulang
       })
     } else {
       res.status(StatusCodes.OK).json({
-        status: true,
+        status: success,
         message: noData,
         data: []
       })
     }
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).json({
-      status: false,
+      status: failed,
       message: error.message
     })
   }
@@ -65,6 +183,7 @@ controller.postData = async function (req, res, next) {
           tanggal: req.body.tanggal,
       })
       res.status(201).json({
+          status: success,
           message: addSuccess,
           data: data_daur_ulang
       })
@@ -88,9 +207,73 @@ controller.updateData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
+      const inventaris = await model.data_inventaris;
+      const divisi_ruang = await model.data_divisi_ruang;
+      const divisi = await model.data_divisi;
+      const ruang = await model.data_ruang;
+      const pencatat = await model.app_user;
+      const jabatan = await model.app_jabatan;
+      const person = await model.data_person;
+      const daur_ulang = await model.data_daur_ulang.findOne({ include: 
+        [
+          {
+            model: inventaris, as: 'lama', 
+              include: 
+              [
+                model.data_barang,
+                {
+                  model: person, 
+                  model: person, 
+                  as: 'donatur'
+                },
+                  model.data_divisi,
+                {
+                  model: divisi_ruang,
+                  include: [divisi, ruang, {model: pencatat, include:[divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat', 'role', 'email']}]
+                },
+                {
+                  model: divisi,
+                  as: 'pemilik'
+                },
+                {
+                  model: pencatat,
+                  include: [divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat']
+                }
+              ]
+          },
+          {
+            model: inventaris, as: 'baru', 
+              include: 
+              [
+                model.data_barang,
+                {
+                  model: person, 
+                  as: 'donatur'
+                },
+                  model.data_divisi,
+                {
+                  model: divisi_ruang,
+                  include: [divisi, ruang, {model: pencatat, include:[divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat', 'role', 'email']}]
+                },
+                {
+                  model: divisi,
+                  as: 'pemilik'
+                },
+                {
+                  model: pencatat,
+                  include: [divisi, jabatan],attributes: ['kode', 'nip', 'nama', 'jabatan','divisi','no_hp','alamat']
+                }
+              ]
+          }
+        ],
+        where: {
+            kode: req.params.kode
+        }
+      })
       res.status(StatusCodes.OK).json({
+          status: success,
           message: updateSuccess,
-          data: data_daur_ulang
+          data: daur_ulang
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({

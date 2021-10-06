@@ -1,27 +1,29 @@
 const model = require('../../app/model');
 const {StatusCodes}= require('http-status-codes');
-const {success, noData, addSuccess, updateSuccess, deleteSuccess}= require('../../app/enum');
+const {success, noData, addSuccess, updateSuccess, deleteSuccess, getData, failed}= require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
   try {
-        const data_peminjaman = await model.data_peminjaman.findAll({include:[model.data_barang, model.data_person]});
-        if (data_peminjaman.length > 0) {
-          res.status(StatusCodes.OK).json({
-            status: true,
-            message: success,
-            data: data_peminjaman
-          })
-        } else {
-          res.status(StatusCodes.OK).json({
-            status: true,
-            message: noData,
-            data: []
-          })
-        }
+    const barang = await model.data_barang;
+    const golongan = await model.data_barang_golongan;
+    const data_peminjaman = await model.data_peminjaman.findAll({include:[{model:barang, include: [golongan] }, model.data_person]});
+    if (data_peminjaman.length > 0) {
+      res.status(StatusCodes.OK).json({
+        status: success,
+        message: getData,
+        data: data_peminjaman
+      })
+    } else {
+      res.status(StatusCodes.OK).json({
+        status: success,
+        message: noData,
+        data: []
+      })
+    }
   } catch (error) {
     res.status(404).json({
-      status: false,
+      status: failed,
       message: error.message
     })
   };
@@ -29,27 +31,29 @@ controller.getAll = async function (req, res , next) {
 
 controller.getById = async function (req, res, next) {
   try {
-    const data_peminjaman = await model.data_peminjaman.findAll({include:[model.data_barang, model.data_person],
+    const barang = await model.data_barang;
+    const golongan = await model.data_barang_golongan;
+    const data_peminjaman = await model.data_peminjaman.findAll({include:[{model:barang, include: [golongan] }, model.data_person],
         where: {
             kode: req.params.kode
         }
     })
     if (data_peminjaman.length > 0) {
       res.status(StatusCodes.OK).json({
-        status: true,
-        message: success,
+        status: success,
+        message: getData,
         data: data_peminjaman
       })
     } else {
       res.status(StatusCodes.OK).json({
-        status: true,
+        status: success,
         message: noData,
         data: []
       })
     }
   } catch (error) {
     res.status(404).json({
-      status: false,
+      status: failed,
       message: error.message
     })
   }
@@ -74,6 +78,7 @@ controller.postData = async function (req, res, next) {
       })
   } catch (error) {
       res.status(404).json({
+          status: failed,
           message: error.message
       })
   };
@@ -97,12 +102,21 @@ controller.updateData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
+      const barang = await model.data_barang;
+      const golongan = await model.data_barang_golongan;
+      const peminjaman = await model.data_peminjaman.findAll({include:[{model:barang, include: [golongan] }, model.data_person],
+        where: {
+            kode: req.params.kode
+        }
+      })
       res.status(StatusCodes.OK).json({
+          status: success,
           message: updateSuccess,
-          data: data_peminjaman
+          data: peminjaman
       })
   } catch (error) {
       res.status(404).json({
+          status: failed,
           message: error.message
       })
   }
@@ -116,11 +130,13 @@ controller.deleteData = async function (req, res, next) {
           }
       })
       res.status(StatusCodes.OK).json({
+          status: success,
           message: deleteSuccess,
           data: data_peminjaman
       })
   } catch (error) {
       res.status(404).json({
+          status: failed,
           message: error.message
       })
   }

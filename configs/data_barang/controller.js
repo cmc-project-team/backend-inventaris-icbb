@@ -1,6 +1,6 @@
 const model = require('../../app/model');
 const {StatusCodes} = require('http-status-codes');
-const {success, noData, addSuccess, updateSuccess, deleteSuccess} = require('../../app/enum');
+const {success, noData, addSuccess, updateSuccess, deleteSuccess, getData} = require('../../app/enum');
 const controller = {};
 
 controller.getAll = async function (req, res , next) {
@@ -8,15 +8,15 @@ controller.getAll = async function (req, res , next) {
         const data_barang = await model.data_barang.findAll({include: [model.data_barang_golongan]});
         if (data_barang.length > 0) {
           res.status(StatusCodes.OK).json({
-            status: true,
-            message: success,
-            data: data_barang
+            status: success,
+            message: getData,
+            data: data_barang,
           })
         } else {
           res.status(StatusCodes.OK).json({
-            status: true,
+            status: success,
             message: noData,
-            data: []
+            data: [],
           })
         }
   } catch (error) {
@@ -36,15 +36,15 @@ controller.getById = async function (req, res, next) {
     })
     if (data_barang.length > 0) {
       res.status(StatusCodes.OK).json({
-        status: true,
-        message: success,
-        data: data_barang
+        status: success,
+        message: getData,
+        data: data_barang,
       })
     } else {
       res.status(StatusCodes.OK).json({
-        status: true,
+        status: success,
         message: noData,
-        data: []
+        data: [],
       })
     }
   } catch (error) {
@@ -64,9 +64,10 @@ controller.postData = async function (req, res, next) {
           code : req.body.code
       })
       res.status(StatusCodes.CREATED).json({
-          message: addSuccess,
-          data: data_barang
+        message: addSuccess,
+        data: data_barang,
       })
+      
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({
           message: error.message
@@ -86,9 +87,14 @@ controller.updateData = async function (req, res, next) {
               kode: req.params.kode
           }
       })
+      const barang = await model.data_barang.findOne({include: [model.data_barang_golongan],
+        where: {
+            kode: req.params.kode
+        }
+      })
       res.status(StatusCodes.OK).json({
           message: updateSuccess,
-          data: data_barang
+          data: barang,
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({
@@ -106,7 +112,7 @@ controller.deleteData = async function (req, res, next) {
       })
       res.status(StatusCodes.OK).json({
           message: deleteSuccess,
-          data: data_barang
+          data: data_barang,
       })
   } catch (error) {
       res.status(StatusCodes.NOT_FOUND).json({

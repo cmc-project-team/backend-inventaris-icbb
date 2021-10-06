@@ -1,9 +1,10 @@
 const sequelize = require('sequelize');
 const db = require('../../db/mysql');
 const data_barang = require('../data_barang/model');
-const data_divisi = require('../data_divisi/model');
+const app_user = require('../app_user/model');
+const data_divisi_ruang = require('../data_divisi_ruang/model');
 const data_person = require('../data_person/model');
-const data_ruang = require('../data_ruang/model');
+const data_divisi = require('../data_divisi/model');
 
 
 const data_inventaris = db.define('data_inventaris', {
@@ -32,7 +33,7 @@ const data_inventaris = db.define('data_inventaris', {
         type: sequelize.DataTypes.STRING,
         allowNull: true
     },
-    ruang: {
+    lokasi: {
         type: sequelize.DataTypes.STRING,
         allowNull: true
     },
@@ -41,10 +42,6 @@ const data_inventaris = db.define('data_inventaris', {
         allowNull: true
     },
     kondisi: {
-        type: sequelize.DataTypes.STRING,
-        allowNull: true
-    },
-    status_lokasi: {
         type: sequelize.DataTypes.STRING,
         allowNull: true
     },
@@ -71,6 +68,7 @@ data_inventaris.belongsTo(data_barang, {
     }
 });
 data_inventaris.belongsTo(data_person,{
+    as: 'donatur',
     foreignKey: {
         name: 'person_donatur'
     }
@@ -80,22 +78,22 @@ data_inventaris.belongsTo(data_divisi,{
         name: 'divisi'
     }
 });
-data_inventaris.belongsTo(data_ruang,{
+data_inventaris.belongsTo(data_divisi_ruang,{
     foreignKey: {
-        name: 'ruang'
+        name: 'lokasi'
     }
 });
-data_inventaris.belongsTo(data_person,{
+data_inventaris.belongsTo(data_divisi,{
+    as: 'pemilik',
     foreignKey: {
         name: 'kepemilikan'
     }
 });
-data_inventaris.belongsTo(data_person,{
+data_inventaris.belongsTo(app_user,{
     foreignKey: {
         name: 'person_pencatat'
     }
 }); 
 
 
-// area.removeAttribute('id');
 module.exports = data_inventaris;
